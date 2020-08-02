@@ -7,8 +7,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
 
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    // Override point for customization after application launch.
+  func application(_ application: UIApplication,
+                   didFinishLaunchingWithOptions
+    launchOptions: [UIApplication.LaunchOptionsKey: Any]?)
+                   -> Bool {
+    
+    // Save test bow tie
+    let bowtie = NSEntityDescription.insertNewObject(
+      forEntityName: "BowTie",
+      into: self.persistentContainer.viewContext) as! BowTie
+    bowtie.name = "My bow tie"
+    bowtie.lastWorn = Date()
+    saveContext()
+    
+    // Retrieve test bow tie
+    let request: NSFetchRequest<BowTie> = BowTie.fetchRequest()
+    
+    if let ties =
+      try? self.persistentContainer.viewContext.fetch(request),
+      let testName = ties.first?.name,
+      let testLastWorn = ties.first?.lastWorn {
+      print("Name: \(testName), Worn: \(testLastWorn)")
+    } else {
+      print("Test failed.")
+    }
+    
     return true
   }
 
